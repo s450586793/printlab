@@ -12,6 +12,12 @@ from printlab.api import app
 @pytest.fixture
 def workspace(tmp_path, monkeypatch):
     monkeypatch.setattr(core, 'ROOT', tmp_path)
+    home = tmp_path / 'Runtime/codex'
+    monkeypatch.setenv('CODEX_HOME', str(home))
+    for name in ('OPENAI_API_KEY', 'CODEX_API_KEY', 'PRINTLAB_PROVIDER_API_KEY'):
+        monkeypatch.delenv(name, raising=False)
+    home.mkdir(parents=True)
+    (home / 'config.toml').write_text('model = "configured-model"\n', encoding='utf-8')
     core.write_json(tmp_path / 'Runtime/config.json', {})
     core.new_project('保留项目')
     core.new_project('删除测试')

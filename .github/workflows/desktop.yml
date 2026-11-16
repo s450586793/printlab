@@ -1,7 +1,5 @@
-name: Desktop VM verification
+name: Legacy desktop verification (manual)
 on:
-  push:
-  pull_request:
   workflow_dispatch:
 permissions:
   contents: read
