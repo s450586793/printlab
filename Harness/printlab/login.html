@@ -1,0 +1,225 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <meta name="referrer" content="same-origin">
+  <title>登录 · PrintLab</title>
+  <style>
+    :root {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", sans-serif;
+      color-scheme: light; font-synthesis: none; -webkit-font-smoothing: antialiased;
+      --bg: #f6f8f4; --panel: #fdfefb; --text: #29372d; --muted: #626f65; --line: #dce3d8;
+      --control-border: #899688; --accent: #456c4c; --accent-soft: #e4eddf; --hover: #385a3e;
+      --error: #a13f31; --error-bg: #fbefeb; background: var(--bg); color: var(--text);
+    }
+    :root[data-theme="dark"] {
+      color-scheme: dark; --bg: #191f1a; --panel: #222b23; --text: #e1e9dc; --muted: #adb7a6;
+      --line: #394437; --control-border: #7c8e73; --accent: #b0c89d; --accent-soft: #303e2b;
+      --hover: #c0d5af; --error: #f0ab9d; --error-bg: #392a25;
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; min-width: 280px; font-size: 14px; line-height: 1.5; }
+    button, input { font: inherit; }
+    button { cursor: pointer; -webkit-tap-highlight-color: transparent; }
+    button:disabled { cursor: wait; opacity: .65; }
+    button:focus-visible, input:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+    h1, h2, p { margin: 0; }
+    .page { min-height: 100dvh; display: flex; flex-direction: column; max-width: 960px; margin: auto; padding: 24px 36px 20px; }
+    .brand { display: inline-flex; align-items: center; gap: 9px; align-self: flex-start; }
+    .brand-icon { width: 25px; height: 28px; color: var(--accent); flex-shrink: 0; }
+    .brand strong { display: block; font-size: 20px; line-height: 1.2; font-weight: 650; letter-spacing: -.7px; }
+    .brand small { display: block; margin-top: 3px; color: var(--muted); font-size: 10px; letter-spacing: .04em; }
+    main { display: grid; grid-template-columns: minmax(0, 1fr) 340px; align-items: center; gap: 64px; flex: 1; padding: 36px 0; }
+    .eyebrow { display: inline-flex; align-items: center; gap: 8px; color: var(--accent); font-size: 11px; font-weight: 600; letter-spacing: .06em; }
+    .eyebrow::before { content: ""; height: 1px; width: 18px; background: currentColor; }
+    h1 { font-size: 28px; font-weight: 600; letter-spacing: -.035em; line-height: 1.4; margin-top: 12px; }
+    .intro { max-width: 320px; font-size: 14px; line-height: 1.75; color: var(--muted); margin-top: 12px; }
+    .model-sketch { display: block; width: 200px; max-width: 100%; height: auto; margin: 20px 0 14px; color: var(--accent); }
+    .journey { display: flex; align-items: center; gap: 10px; font-size: 11px; color: var(--muted); }
+    .journey span { display: inline-flex; align-items: center; gap: 6px; }
+    .journey b { width: 4px; height: 4px; border-radius: 50%; background: var(--accent); }
+    .journey i { width: 20px; height: 1px; background: var(--line); }
+    .login-card { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 24px; }
+    .login-card h2 { font-size: 21px; font-weight: 600; letter-spacing: -.025em; line-height: 1.4; }
+    .login-card > p { font-size: 13px; line-height: 1.6; color: var(--muted); margin-top: 6px; }
+    form { margin-top: 22px; }
+    fieldset { padding: 0; margin: 0; border: 0; min-width: 0; }
+    .field { display: block; margin-bottom: 16px; }
+    .field-label { display: block; margin-bottom: 6px; font-size: 13px; font-weight: 550; }
+    .input-wrap { display: flex; align-items: center; border: 1px solid var(--control-border); border-radius: 7px; background: var(--bg); transition: border-color .15s; }
+    .input-wrap:focus-within { border-color: var(--accent); }
+    .input-wrap svg { width: 16px; height: 16px; color: var(--muted); margin-left: 10px; flex-shrink: 0; }
+    input { display: block; width: 100%; min-width: 0; border: 0; background: transparent; color: var(--text); font-size: 14px; line-height: 22px; padding: 9px 10px; border-radius: 7px; }
+    input::placeholder { color: var(--muted); opacity: .8; }
+    input:focus { outline: none; }
+    .input-wrap:has(input:focus-visible) { outline: 2px solid var(--accent); outline-offset: 3px; }
+    .input-wrap:has(input[aria-invalid="true"]) { border-color: var(--error); }
+    .password-toggle { border: 0; background: none; color: var(--muted); min-width: 46px; min-height: 40px; padding: 7px 10px; font-size: 12px; border-radius: 6px; flex-shrink: 0; }
+    .password-toggle:hover { color: var(--accent); }
+    .submit { display: flex; align-items: center; justify-content: center; gap: 8px; border: 1px solid var(--accent); border-radius: 7px; background: var(--accent); color: #fdfefb; width: 100%; min-height: 40px; font-size: 14px; font-weight: 550; padding: 9px 16px; transition: background-color .15s; }
+    [data-theme="dark"] .submit { color: #172411; }
+    .submit:hover:not(:disabled) { background: var(--hover); }
+    .submit svg { width: 16px; height: 16px; }
+    .feedback { min-height: 24px; font-size: 12px; line-height: 1.6; color: var(--error); margin-top: 10px; overflow-wrap: anywhere; }
+    .feedback:not(:empty) { padding: 8px 10px; background: var(--error-bg); border-radius: 6px; }
+    .card-note { padding-top: 14px; border-top: 1px solid var(--line); display: flex; align-items: center; gap: 7px; color: var(--muted); font-size: 11px; line-height: 1.6; }
+    .card-note svg { width: 14px; height: 14px; flex-shrink: 0; }
+    .page-footer { display: flex; justify-content: space-between; gap: 16px; border-top: 1px solid var(--line); padding-top: 14px; font-size: 10px; color: var(--muted); line-height: 1.6; }
+    .noscript { margin: 12px 0; color: var(--error); font-size: 13px; line-height: 1.6; }
+    @media (max-width: 760px) {
+      .page { max-width: 420px; padding: 22px 24px 18px; }
+      main { display: block; padding: 24px 0; }
+      .story { margin-bottom: 20px; }
+      h1 { font-size: 24px; margin-top: 8px; }
+      .intro { margin-top: 8px; font-size: 13px; }
+      .model-sketch, .journey { display: none; }
+      .login-card { padding: 22px; }
+      .login-card h2 { font-size: 20px; }
+      input { font-size: 16px; line-height: 24px; padding: 9px 10px; }
+      .password-toggle, .submit { min-height: 44px; }
+      .page-footer { gap: 6px; flex-wrap: wrap; }
+    }
+    @media (max-width: 360px) { .page { padding: 18px 16px; } .login-card { padding: 18px; } }
+    @media (pointer: coarse) {
+      input { font-size: 16px; line-height: 24px; min-height: 44px; }
+      .password-toggle, .submit { min-height: 44px; }
+    }
+    @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <header class="brand" aria-label="PrintLab 我的设计工作室">
+      <svg class="brand-icon" viewBox="0 0 31 34" fill="none" aria-hidden="true"><path d="M15.5 2 28 9.3v15.4L15.5 32 3 24.7V9.3L15.5 2Z" stroke="currentColor" stroke-width="1.7"/><path d="m3 9.3 12.5 7.3L28 9.3M15.5 16.6V32M9.3 5.6l12.5 7.3v8.7" stroke="currentColor" stroke-width="1.7"/></svg>
+      <div><strong>PrintLab</strong><small>我的设计工作室</small></div>
+    </header>
+    <main>
+      <section class="story" aria-labelledby="welcome-title">
+        <span class="eyebrow">从想法到实物</span>
+        <h1 id="welcome-title">继续手上的创作。</h1>
+        <p class="intro">模型、参考图片与每次讨论，<br>都保存在同一个项目里。</p>
+        <svg class="model-sketch" viewBox="0 0 340 220" fill="none" aria-hidden="true">
+          <path d="M22 167 174 78l146 85-152 89L22 167Z" fill="var(--accent-soft)" transform="translate(0 -22)"/>
+          <path d="m27 143 146-85 140 82M173 58v135M80 174l145-84M125 200l145-84" stroke="currentColor" stroke-opacity=".12"/>
+          <path d="m109 75 61-35 61 35v72l-61 36-61-36V75Z" fill="var(--panel)" stroke="currentColor" stroke-width="1.5"/>
+          <path d="m109 75 61 36 61-36-61-35-61 35Z" fill="var(--accent-soft)"/>
+          <path d="m170 111 61-36v72l-61 36v-72Z" fill="var(--accent-soft)" fill-opacity=".45"/>
+          <path d="m109 75 61 36 61-36M170 111v72m-31-125 62 36v35" stroke="currentColor" stroke-width="1.5"/>
+          <path d="M109 68V40m122 28V40M110 47h119M102 75H78m24 72H78m8-70v68" stroke="currentColor" stroke-opacity=".35"/>
+          <path d="m107 44 6 6m114-6 6 6M83 75l6 6m-6 63 6 6" stroke="currentColor" stroke-opacity=".5"/>
+          <circle cx="170" cy="40" r="3" fill="currentColor"/>
+          <circle cx="109" cy="147" r="3" fill="currentColor"/>
+          <circle cx="231" cy="147" r="3" fill="currentColor"/>
+        </svg>
+        <div class="journey" aria-hidden="true"><span><b></b>构思</span><i></i><span><b></b>建模</span><i></i><span><b></b>成形</span></div>
+      </section>
+      <section class="login-card" aria-labelledby="login-title">
+        <h2 id="login-title">欢迎回来</h2>
+        <p>登录工作室，继续上一次创作。</p>
+        <noscript><p class="noscript">请开启浏览器的 JavaScript 后登录。</p></noscript>
+        <form id="login-form" action="/api/auth/login" method="post">
+          <fieldset id="login-fields">
+            <div class="field">
+              <label class="field-label" for="username">账号</label>
+              <span class="input-wrap">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><circle cx="12" cy="8" r="3.5"/><path d="M5 21v-2a7 7 0 0 1 14 0v2"/></svg>
+                <input id="username" name="username" type="text" placeholder="输入账号" autocomplete="username" autocapitalize="none" spellcheck="false" required maxlength="128" aria-describedby="login-feedback">
+              </span>
+            </div>
+            <div class="field">
+              <label class="field-label" for="password">密码</label>
+              <span class="input-wrap">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><rect x="5" y="10" width="14" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3m-4 4v3"/></svg>
+                <input id="password" name="password" type="password" placeholder="输入密码" autocomplete="current-password" required maxlength="2048" aria-describedby="login-feedback">
+                <button class="password-toggle" id="password-toggle" type="button" aria-label="显示密码" aria-pressed="false" aria-controls="password">显示</button>
+              </span>
+            </div>
+            <button class="submit" id="login-submit" type="submit"><span id="submit-label">进入工作台</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M5 12h14m-6-6 6 6-6 6"/></svg></button>
+          </fieldset>
+          <p class="feedback" id="login-feedback" role="alert" aria-live="polite"></p>
+        </form>
+        <p class="card-note"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="m12 3 8 4v5c0 5-8 9-8 9s-8-4-8-9V7l8-4Z"/><path d="m8.5 12 2.5 2.5 4.5-5"/></svg>你的项目与创作记录，需要登录后查看。</p>
+      </section>
+    </main>
+    <footer class="page-footer"><span>PrintLab · 从想法到实物</span><span>每一个版本，都离想法更近一点。</span></footer>
+  </div>
+  <script>
+    (() => {
+      try {
+        if (localStorage.getItem('printlab-theme') === 'dark') document.documentElement.dataset.theme = 'dark';
+      } catch {}
+      const form = document.getElementById('login-form');
+      const fields = document.getElementById('login-fields');
+      const username = document.getElementById('username');
+      const password = document.getElementById('password');
+      const toggle = document.getElementById('password-toggle');
+      const label = document.getElementById('submit-label');
+      const feedback = document.getElementById('login-feedback');
+      let busy = false;
+
+      function clearError() {
+        feedback.textContent = '';
+        username.removeAttribute('aria-invalid');
+        password.removeAttribute('aria-invalid');
+      }
+      username.addEventListener('input', clearError);
+      password.addEventListener('input', clearError);
+      toggle.addEventListener('click', () => {
+        const visible = password.type === 'password';
+        password.type = visible ? 'text' : 'password';
+        toggle.textContent = visible ? '隐藏' : '显示';
+        toggle.setAttribute('aria-label', visible ? '隐藏密码' : '显示密码');
+        toggle.setAttribute('aria-pressed', String(visible));
+      });
+
+      form.addEventListener('submit', async event => {
+        event.preventDefault();
+        if (busy || !form.reportValidity()) return;
+        busy = true;
+        clearError();
+        fields.disabled = true;
+        label.textContent = '正在登录…';
+        const controller = new AbortController();
+        const timeout = setTimeout(() => controller.abort(), 15000);
+        try {
+          const response = await fetch('/api/auth/login', {
+            method: 'POST',
+            credentials: 'same-origin',
+            signal: controller.signal,
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({username: username.value.trim(), password: password.value})
+          });
+          if (!response.ok) {
+            feedback.textContent = response.status === 401 ? '账号或密码不正确，请重新输入。'
+              : response.status === 429 ? '登录尝试较多，请稍后再试。'
+              : '暂时无法登录，请稍后再试。';
+            if (response.status === 401) {
+              username.setAttribute('aria-invalid', 'true');
+              password.setAttribute('aria-invalid', 'true');
+            }
+            return;
+          }
+          const result = await response.json();
+          let next = '/#/overview';
+          if (typeof result.next === 'string' && result.next.startsWith('/') && !result.next.startsWith('//')) {
+            const target = new URL(result.next, location.origin);
+            if (target.origin === location.origin && target.pathname !== '/login') next = target.pathname + target.search + target.hash;
+          }
+          password.value = '';
+          location.assign(next);
+        } catch {
+          feedback.textContent = '暂时无法连接工作室，请稍后重试。';
+        } finally {
+          clearTimeout(timeout);
+          busy = false;
+          fields.disabled = false;
+          label.textContent = '进入工作台';
+          if (password.getAttribute('aria-invalid') === 'true') password.focus();
+        }
+      });
+    })();
+  </script>
+</body>
+</html>

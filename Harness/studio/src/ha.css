@@ -1,0 +1,27 @@
+.device-selection-bar{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:0 0 14px;margin-bottom:16px;border-bottom:1px solid var(--line)}
+.device-selection-bar>span{font-size:12px;color:var(--muted);line-height:1.5}
+.printer-selector{display:flex;align-items:center;gap:10px;min-width:0;font-size:13px}
+.printer-selector>span{display:flex;align-items:center;gap:6px;white-space:nowrap;color:var(--muted)}
+.printer-selector>span>svg{width:15px;height:15px}
+.printer-selector select{font:inherit;color:var(--text);background:var(--panel);border:1px solid var(--control-border,var(--line));border-radius:7px;min-height:var(--ui-control,36px);min-width:120px;max-width:100%;padding:6px 28px 6px 10px;cursor:pointer}
+.printer-selector select:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+.printer-selector select:disabled{cursor:wait;opacity:.65}
+.topbar .printer-selector>span{display:none}.topbar .printer-selector select{min-width:92px;max-width:160px;min-height:32px;font-size:12px}
+.overview-device-selector .printer-selector{justify-content:space-between}.overview-device-selector .printer-selector select{min-width:100px;max-width:62%;min-height:32px}
+.printer-camera{padding:16px;background:var(--panel);border:1px solid var(--line);border-radius:var(--ui-radius,10px);margin-top:16px}
+.printer-camera img{display:block;width:100%;max-height:280px;aspect-ratio:16/9;object-fit:contain;background:#172018;border-radius:7px}
+.printer-camera .section-heading h2{font-size:17px}
+.history-summary.cache-summary{grid-template-columns:repeat(3,minmax(0,1fr))}
+@media(max-width:640px){
+ .device-selection-bar{flex-direction:column;align-items:stretch;gap:8px;padding-bottom:12px;margin-bottom:14px}
+ .printer-selector{justify-content:space-between;gap:10px;font-size:13px}.printer-selector select{font-size:16px;flex:1;min-width:0;max-width:70%;min-height:40px}
+ .topbar .printer-selector select{font-size:13px;min-width:72px;max-width:104px;min-height:40px;padding-right:18px}
+ .topbar:has(.printer-selector) .local-badge{display:none}
+ .overview-device-selector .printer-selector select{font-size:16px;min-height:40px;max-width:70%}
+ .printer-camera{padding:14px;margin-top:14px}.printer-camera img{max-height:220px}
+ .printer-camera .section-heading{align-items:flex-start;flex-direction:column;gap:4px}
+ .history-summary.cache-summary{grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+}
+@media(pointer:coarse){
+ .printer-selector select,.topbar .printer-selector select,.overview-device-selector .printer-selector select{font-size:16px;min-height:44px}
+}

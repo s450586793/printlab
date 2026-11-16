@@ -1,0 +1,42 @@
+#!/bin/sh
+set -eu
+
+version=02.09.01.70
+sha256=e0dfb6dafe0181b6bf8635bbb9a7b106f02f2343f8e41949f1d156b3f36241e5
+url=https://github.com/bambulab/BambuStudio/releases/download/v02.09.01.70/BambuStudio_ubu22_v02.09.01.70-20261103183404.AppImage
+destination=/opt/bambu-studio
+
+if [ "$(uname -m)" != x86_64 ]; then
+    echo 'The pinned Bambu Studio AppImage requires Linux x86_64.' >&2
+    exit 1
+fi
+if [ "$#" -gt 1 ] || [ -e "$destination" ]; then
+    echo 'Usage: install-bambu-studio [verified-source-appimage]; destination must not exist.' >&2
+    exit 1
+fi
+
+temporary=$(mktemp -d /tmp/printlab-bambu.XXXXXX)
+trap 'rm -rf "$temporary"' EXIT HUP INT TERM
+appimage="$temporary/BambuStudio.AppImage"
+if [ "$#" -eq 1 ]; then
+    cp "$1" "$appimage"
+else
+    curl --fail --location --retry 3 --connect-timeout 30 --max-time 900 \
+        "$url" --output "$appimage"
+fi
+if ! printf '%s  %s\n' "$sha256" "$appimage" | sha256sum --check --status; then
+    echo 'Bambu Studio AppImage does not match the pinned SHA-256.' >&2
+    exit 1
+fi
+chmod 755 "$appimage"
+cd "$temporary"
+"$appimage" --appimage-extract > /dev/null
+test -x squashfs-root/bin/bambu-studio
+test -f 'squashfs-root/resources/profiles/BBL/machine/Bambu Lab A1 0.4 nozzle.json'
+test -f 'squashfs-root/resources/profiles/BBL/machine/Bambu Lab P1P 0.4 nozzle.json'
+chmod -R a+rX squashfs-root
+mv squashfs-root "$destination"
+cat > "$destination/PRINTLAB-SOURCE.json" <<EOF
+{"name":"Bambu Studio","version":"$version","appimage_sha256":"$sha256","source_url":"$url","upstream":"https://github.com/bambulab/BambuStudio","license":"AGPL-3.0; upstream notices and bundled resources retained"}
+EOF
+chmod 644 "$destination/PRINTLAB-SOURCE.json"

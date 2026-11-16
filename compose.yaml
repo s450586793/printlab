@@ -1,0 +1,39 @@
+name: printlab
+services:
+  prepare:
+    image: ${PRINTLAB_IMAGE:-ghcr.io/s450586793/printlab:latest}
+    platform: linux/amd64
+    user: "0:0"
+    entrypoint:
+      - /opt/venv/bin/python
+      - -c
+      - "from printlab.container_runtime import prepare_data; prepare_data('/data', '/secrets')"
+    volumes:
+      - ${PRINTLAB_DATA_DIR:-./deploy/data}:/data
+      - ./deploy/secrets:/secrets
+    restart: "no"
+  printlab:
+    image: ${PRINTLAB_IMAGE:-ghcr.io/s450586793/printlab:latest}
+    platform: linux/amd64
+    init: false
+    # Allow Codex to create its own workspace sandbox inside this container.
+    security_opt:
+      - seccomp=unconfined
+      - apparmor=unconfined
+    depends_on:
+      prepare:
+        condition: service_completed_successfully
+    restart: unless-stopped
+    ports:
+      - "${PRINTLAB_BIND_IP:-127.0.0.1}:${PRINTLAB_PORT:-8018}:8018"
+    environment:
+      PRINTLAB_STUDIO_URL: ${PRINTLAB_STUDIO_URL:-http://127.0.0.1:8018}
+      PRINTLAB_WEB_AUTH_FILE: ${PRINTLAB_WEB_AUTH_FILE:-}
+      PRINTLAB_PROXY_HEADERS: ${PRINTLAB_PROXY_HEADERS:-0}
+      PRINTLAB_FORWARDED_ALLOW_IPS: ${PRINTLAB_FORWARDED_ALLOW_IPS:-127.0.0.1}
+      TZ: Asia/Shanghai
+    volumes:
+      - ${PRINTLAB_DATA_DIR:-./deploy/data}:/data
+      - ./deploy/secrets:/run/printlab-secrets:ro
+    shm_size: 256mb
+    stop_grace_period: 30s

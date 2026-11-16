@@ -1,0 +1,35 @@
+.printer-monitor-grid{display:grid;grid-template-columns:minmax(0,1fr);gap:16px;align-items:start}
+.printer-monitor{min-width:0;background:var(--panel);border:1px solid var(--line);border-radius:var(--ui-radius);overflow:hidden}
+.printer-monitor-heading,.printer-monitor-heading>div{display:flex;align-items:center;gap:8px;min-width:0}
+.printer-monitor-heading{justify-content:space-between;padding:12px 16px}
+.printer-monitor-heading h2{font-size:17px}.printer-monitor-heading>div>span{font-size:12px;color:var(--muted)}
+.printer-monitor-camera{position:relative;aspect-ratio:16/9;background:#111812;color:#e1e9dc;overflow:hidden}
+.printer-monitor-camera img{display:block;width:100%;height:100%;object-fit:contain}
+.printer-camera-placeholder{height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;padding:16px;text-align:center}
+.printer-camera-placeholder>span{font-size:12px;color:#b4c0b4}
+.printer-camera-caption{position:absolute;bottom:8px;left:10px;padding:3px 7px;background:#111812d9;border-radius:4px;font-size:11px;pointer-events:none}
+.printer-monitor-parameters{padding:14px 16px}
+.printer-print-state{display:flex;align-items:baseline;justify-content:space-between;flex-wrap:wrap;gap:4px 12px}
+.printer-print-state>strong{font-size:14px}.printer-print-state .updated-note{font-size:11px}
+.printer-current-task{margin:12px 0}.printer-current-task>span,.printer-progress-label>span{font-size:12px;color:var(--muted)}
+.printer-current-task p{font-size:13px;overflow-wrap:anywhere;margin-top:3px}
+.printer-progress-label{display:flex;justify-content:space-between;align-items:baseline;gap:12px}.printer-progress-label strong{font-size:14px;font-variant-numeric:tabular-nums}
+.printer-progress{height:5px;background:var(--line);border-radius:3px;overflow:hidden;margin:6px 0 14px}.printer-progress>span{display:block;height:100%;background:var(--accent)}
+.printer-parameter-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin:0}
+.printer-parameter-grid>div{padding:10px 12px;background:var(--faint);border-radius:7px;min-width:0}
+.printer-parameter-grid dt{font-size:12px;color:var(--muted)}.printer-parameter-grid dd{margin:3px 0 0;font-size:18px;line-height:1.4;font-weight:600;font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
+.printer-telemetry-note{font-size:12px;color:var(--muted);margin-top:12px}
+.printer-loaded-materials{margin-top:16px;border-top:1px solid var(--line);padding-top:12px}
+.printer-loaded-materials>h3{display:flex;align-items:center;gap:6px;font-size:13px;margin-bottom:8px}
+.printer-module-name{display:block;font-size:11px;color:var(--muted);margin-bottom:6px}.printer-loaded-module+.printer-loaded-module{margin-top:8px}
+.printer-loaded-slots{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+.printer-loaded-slot{position:relative;min-width:0;border:1px solid var(--line);border-radius:6px;padding:8px}
+.printer-slot-swatch{display:block;height:8px;border:1px solid var(--line);border-radius:3px;margin-bottom:7px}.printer-slot-number{display:block;font-size:11px;color:var(--muted)}
+.printer-loaded-slot strong{display:block;font-size:11px;line-height:1.5;font-weight:500;overflow-wrap:anywhere;margin-top:2px}
+.printer-material-details{margin-top:8px;font-size:12px;color:var(--muted)}.printer-material-details>summary{display:flex;align-items:center;min-height:36px;cursor:pointer;width:fit-content;gap:6px}.printer-material-details>summary::before{content:'›';font-size:17px}.printer-material-details[open]>summary::before{transform:rotate(90deg)}
+.printer-material-details>summary:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.printer-material-details .material-slots-section{margin-top:12px}.printer-material-details .material-slot-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.printer-material-details .material-slot-card{padding:10px}.printer-material-details .material-slot-card header{flex-wrap:wrap}.printer-material-details .material-read-time,.printer-material-details .material-support-note{font-size:12px}
+.printer-ha-link{font-size:12px;min-height:36px;display:flex;align-items:center;width:fit-content;margin-top:6px}
+@media(min-width:800px){.printer-monitor-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:400px){.printer-loaded-slots{grid-template-columns:repeat(2,minmax(0,1fr))}.printer-monitor-heading,.printer-monitor-parameters{padding-left:12px;padding-right:12px}}
+@media(max-width:640px),(pointer:coarse){.printer-material-details>summary,.printer-ha-link{min-height:44px}}

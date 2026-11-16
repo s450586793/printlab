@@ -1,0 +1,2 @@
+#!/bin/sh
+exec /usr/bin/xvfb-run -a /usr/bin/blender "$@"

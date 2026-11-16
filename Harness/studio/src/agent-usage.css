@@ -1,0 +1,26 @@
+.agent-usage-label{display:block;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.project-card .agent-usage-label{font-size:11px;color:var(--muted);margin-top:7px;text-align:left;white-space:normal;overflow:visible;overflow-wrap:anywhere;line-height:1.5}
+.agent-usage{position:relative;min-width:0;font-size:11px;color:var(--muted)}
+.agent-usage>summary{display:flex;align-items:center;gap:5px;min-height:24px;cursor:pointer;list-style:none}
+.agent-usage>summary .agent-usage-label{white-space:normal;overflow:visible;overflow-wrap:anywhere;line-height:1.5}
+.agent-usage>summary::-webkit-details-marker{display:none}
+.agent-usage>summary::after{content:'⌄';flex:none;font-size:12px}
+.agent-usage[open]>summary{color:var(--accent)}
+.agent-usage[open]>summary::after{content:'⌃'}
+.agent-usage-popover{position:absolute;top:calc(100% + 8px);right:0;z-index:6;width:min(560px,calc(100vw - 24px));max-height:min(55dvh,440px);overflow:auto;overscroll-behavior:contain;padding:12px 14px;border:1px solid var(--line);border-radius:8px;box-shadow:0 8px 24px #14201820;background:var(--panel);color:var(--text);font-size:12px;line-height:1.55}
+.agent-usage-title,.agent-usage-model-heading,.agent-usage-pricing{display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:3px 10px}
+.agent-usage-title>span,.agent-usage-pricing,.agent-usage-current,.agent-usage-note{color:var(--muted);font-size:11px}
+.agent-usage-title>strong,.agent-usage-model-heading>strong{font-size:12px;font-weight:500;overflow-wrap:anywhere}
+.agent-usage-numbers{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px 12px;margin:9px 0 0}
+.agent-usage-numbers>div,.agent-usage-rates>div{min-width:0}
+.agent-usage-numbers dt,.agent-usage-rates dt{color:var(--muted);font-size:11px}
+.agent-usage-numbers dd,.agent-usage-rates dd{margin:0;font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
+.agent-usage-cost{margin-top:9px;font-size:12px;font-weight:500}
+.agent-usage-current,.agent-usage-note{margin-top:7px;overflow-wrap:anywhere}
+.agent-usage-model{margin-top:10px;padding-top:10px;border-top:1px solid var(--line)}
+.agent-usage-model-heading>span{font-size:11px;overflow-wrap:anywhere}
+.agent-usage-pricing{margin-top:9px}
+.agent-usage-pricing a{color:var(--accent);text-decoration:underline;text-underline-offset:2px}
+.agent-usage-rates{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px 12px;margin:5px 0 0;font-size:11px}
+@media(max-width:640px){.agent-usage>summary{min-height:32px}.agent-usage-popover{padding:10px 12px}.agent-usage-rates{grid-template-columns:1fr}.agent-usage-rates>div{display:flex;justify-content:space-between;gap:8px}}
+@media(pointer:coarse){.agent-usage>summary,.agent-usage-pricing a{min-height:44px}.agent-usage-pricing a{display:inline-flex;align-items:center}}

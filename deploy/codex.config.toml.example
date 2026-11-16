@@ -1,0 +1,11 @@
+# Optional legacy configuration. New installations can use the web settings.
+model = "your-model-id"
+model_provider = "gateway"
+model_reasoning_effort = "medium"
+
+[model_providers.gateway]
+name = "Your Responses gateway"
+base_url = "https://api.example.com/v1"
+env_key = "PRINTLAB_PROVIDER_API_KEY"
+wire_api = "responses"
+requires_openai_auth = false

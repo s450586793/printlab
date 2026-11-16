@@ -1,0 +1,175 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <meta name="referrer" content="same-origin">
+  <title>初始化 · PrintLab</title>
+  <style>
+    :root { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", sans-serif; color-scheme: light; font-synthesis: none; -webkit-font-smoothing: antialiased; --bg: #f6f8f4; --panel: #fdfefb; --text: #29372d; --muted: #626f65; --line: #dce3d8; --control-border: #899688; --accent: #456c4c; --accent-soft: #e4eddf; --hover: #385a3e; --error: #a13f31; --error-bg: #fbefeb; background: var(--bg); color: var(--text); }
+    :root[data-theme="dark"] { color-scheme: dark; --bg: #191f1a; --panel: #222b23; --text: #e1e9dc; --muted: #adb7a6; --line: #394437; --control-border: #7c8e73; --accent: #b0c89d; --accent-soft: #303e2b; --hover: #c0d5af; --error: #f0ab9d; --error-bg: #392a25; }
+    * { box-sizing: border-box; }
+    body { margin: 0; min-width: 280px; font-size: 14px; line-height: 1.5; }
+    button, input { font: inherit; }
+    button { cursor: pointer; -webkit-tap-highlight-color: transparent; }
+    button:disabled { cursor: wait; opacity: .65; }
+    button:focus-visible, input:focus-visible, a:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+    h1, h2, p { margin: 0; }
+    a { color: var(--accent); }
+    .page { min-height: 100dvh; max-width: 960px; margin: auto; padding: 22px 20px 18px; display: flex; flex-direction: column; }
+    .brand { display: inline-flex; align-items: center; gap: 9px; align-self: flex-start; }
+    .brand svg { width: 25px; height: 28px; color: var(--accent); flex: none; }
+    .brand strong { display: block; font-size: 20px; line-height: 1.2; font-weight: 650; letter-spacing: -.7px; }
+    .brand small { display: block; margin-top: 3px; color: var(--muted); font-size: 10px; letter-spacing: .04em; }
+    main { flex: 1; padding: 24px 0; min-width: 0; }
+    .intro { margin-bottom: 18px; }
+    h1 { font-size: 24px; font-weight: 600; letter-spacing: -.035em; line-height: 1.4; }
+    .intro > p, .instructions { font-size: 13px; line-height: 1.7; color: var(--muted); margin-top: 8px; }
+    .setup-steps { margin-top: 18px; border-top: 1px solid var(--line); padding-top: 14px; }
+    .setup-steps h2 { font-size: 14px; font-weight: 600; }
+    code { display: block; margin-top: 10px; padding: 10px 12px; border: 1px solid var(--line); background: var(--accent-soft); border-radius: 7px; font: 12px/1.7 ui-monospace, SFMono-Regular, Menlo, monospace; color: var(--text); overflow-wrap: anywhere; white-space: pre-wrap; }
+    .setup-card { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 20px; min-width: 0; }
+    .setup-card h2 { font-size: 19px; font-weight: 600; letter-spacing: -.025em; }
+    .setup-card > p { color: var(--muted); font-size: 12px; margin-top: 5px; }
+    form { margin-top: 18px; }
+    fieldset { padding: 0; margin: 0; border: 0; min-width: 0; }
+    .field { display: block; margin-bottom: 13px; }
+    .field-label { display: block; margin-bottom: 5px; font-size: 12px; font-weight: 550; }
+    input { width: 100%; min-width: 0; min-height: 44px; border: 1px solid var(--control-border); background: var(--bg); color: var(--text); font-size: 16px; line-height: 24px; padding: 9px 10px; border-radius: 7px; }
+    input::placeholder { color: var(--muted); opacity: .8; }
+    input[aria-invalid="true"] { border-color: var(--error); }
+    .password-wrap { display: flex; align-items: center; gap: 8px; }
+    .password-toggle { flex: none; min-width: 44px; min-height: 44px; border: 0; background: transparent; color: var(--muted); font-size: 12px; border-radius: 6px; }
+    .password-toggle:hover { color: var(--accent); }
+    .submit { display: block; border: 1px solid var(--accent); border-radius: 7px; background: var(--accent); color: #fdfefb; width: 100%; min-height: 44px; font-size: 14px; font-weight: 550; padding: 9px 16px; }
+    [data-theme="dark"] .submit { color: #172411; }
+    .submit:hover:not(:disabled) { background: var(--hover); }
+    .feedback { min-height: 20px; font-size: 12px; line-height: 1.6; color: var(--error); margin-top: 10px; overflow-wrap: anywhere; }
+    .feedback:not(:empty) { padding: 8px 10px; background: var(--error-bg); border-radius: 6px; }
+    .login-link { font-size: 13px; }
+    .card-note { padding-top: 12px; border-top: 1px solid var(--line); margin-top: 6px; font-size: 11px; color: var(--muted); line-height: 1.6; }
+    .page-footer { border-top: 1px solid var(--line); padding-top: 14px; font-size: 10px; color: var(--muted); }
+    .noscript { color: var(--error); font-size: 13px; }
+    @media (min-width: 761px) { .page { padding: 24px 36px 20px; } main { display: grid; grid-template-columns: minmax(0, 1fr) 360px; align-items: center; gap: 48px; padding: 36px 0; } h1 { font-size: 28px; } .intro { margin: 0; } .setup-card { padding: 24px; } input { font-size: 14px; min-height: 40px; line-height: 22px; padding: 8px 10px; } .submit, .password-toggle { min-height: 40px; } }
+    @media (max-width: 360px) { .page { padding: 18px 16px; } .setup-card { padding: 16px; } }
+    @media (pointer: coarse) { input { font-size: 16px; min-height: 44px; } .submit, .password-toggle { min-height: 44px; } }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <header class="brand" aria-label="PrintLab 我的设计工作室">
+      <svg viewBox="0 0 31 34" fill="none" aria-hidden="true"><path d="M15.5 2 28 9.3v15.4L15.5 32 3 24.7V9.3L15.5 2Z" stroke="currentColor" stroke-width="1.7"/><path d="m3 9.3 12.5 7.3L28 9.3M15.5 16.6V32M9.3 5.6l12.5 7.3v8.7" stroke="currentColor" stroke-width="1.7"/></svg>
+      <div><strong>PrintLab</strong><small>我的设计工作室</small></div>
+    </header>
+    <main>
+      <section class="intro" aria-labelledby="welcome-title">
+        <h1 id="welcome-title">建立你的建模工作台。</h1>
+        <p>先创建管理员账号。进入工作台后，可在设置中添加模型服务与 Home Assistant。</p>
+        <div class="setup-steps">
+          <h2>获取一次性初始化码</h2>
+          <p class="instructions">在部署主机的 Compose 目录运行以下命令，将输出填入管理员表单：</p>
+          <code>docker compose exec printlab cat /data/Runtime/private/setup-token</code>
+          <p class="instructions">初始化码只用于首次创建账号，请妥善保管管理员密码。</p>
+        </div>
+      </section>
+      <section class="setup-card" aria-labelledby="setup-title">
+        <h2 id="setup-title">创建管理员</h2>
+        <p>账号和项目数据保存在当前部署中。</p>
+        <noscript><p class="noscript">请开启浏览器的 JavaScript 后初始化。</p></noscript>
+        <form id="setup-form" action="/api/auth/setup" method="post">
+          <fieldset id="setup-fields">
+            <label class="field" for="setup-token"><span class="field-label">初始化码</span><input id="setup-token" name="setup_token" type="password" autocomplete="off" autocapitalize="none" spellcheck="false" required maxlength="1024" placeholder="粘贴一次性初始化码" aria-describedby="setup-feedback"></label>
+            <label class="field" for="username"><span class="field-label">管理员账号</span><input id="username" name="username" type="text" autocomplete="username" autocapitalize="none" spellcheck="false" required maxlength="128" placeholder="设置登录账号" aria-describedby="setup-feedback"></label>
+            <div class="field"><label class="field-label" for="password">密码 · 至少 12 个字符</label><span class="password-wrap"><input id="password" name="password" type="password" autocomplete="new-password" required minlength="12" maxlength="2048" placeholder="设置管理员密码" aria-describedby="setup-feedback"><button class="password-toggle" id="password-toggle" type="button" aria-label="显示密码" aria-pressed="false" aria-controls="password password-confirm">显示</button></span></div>
+            <label class="field" for="password-confirm"><span class="field-label">确认密码</span><input id="password-confirm" name="password_confirm" type="password" autocomplete="new-password" required minlength="12" maxlength="2048" placeholder="再次输入密码" aria-describedby="setup-feedback"></label>
+            <button class="submit" id="setup-submit" type="submit">创建并进入工作台</button>
+          </fieldset>
+          <p class="feedback" id="setup-feedback" role="alert" aria-live="polite"></p>
+          <a class="login-link" id="login-link" href="/login" hidden>前往登录</a>
+        </form>
+        <p class="card-note">完成后将自动登录。后续访问使用管理员账号和密码。</p>
+      </section>
+    </main>
+    <footer class="page-footer">PrintLab · 从想法到实物</footer>
+  </div>
+  <script>
+    (() => {
+      try { if (localStorage.getItem('printlab-theme') === 'dark') document.documentElement.dataset.theme = 'dark'; } catch {}
+      const form = document.getElementById('setup-form');
+      const fields = document.getElementById('setup-fields');
+      const setupToken = document.getElementById('setup-token');
+      const username = document.getElementById('username');
+      const password = document.getElementById('password');
+      const confirmation = document.getElementById('password-confirm');
+      const toggle = document.getElementById('password-toggle');
+      const submit = document.getElementById('setup-submit');
+      const feedback = document.getElementById('setup-feedback');
+      const loginLink = document.getElementById('login-link');
+      let busy = false;
+      function clearError() {
+        feedback.textContent = '';
+        for (const input of [setupToken, username, password, confirmation]) input.removeAttribute('aria-invalid');
+      }
+      for (const input of [setupToken, username, password, confirmation]) input.addEventListener('input', clearError);
+      toggle.addEventListener('click', () => {
+        const visible = password.type === 'password';
+        password.type = confirmation.type = visible ? 'text' : 'password';
+        toggle.textContent = visible ? '隐藏' : '显示';
+        toggle.setAttribute('aria-label', visible ? '隐藏密码' : '显示密码');
+        toggle.setAttribute('aria-pressed', String(visible));
+      });
+      form.addEventListener('submit', async event => {
+        event.preventDefault();
+        if (busy || !form.reportValidity()) return;
+        clearError();
+        if (password.value !== confirmation.value) {
+          feedback.textContent = '两次输入的密码不一致，请重新核对。';
+          confirmation.setAttribute('aria-invalid', 'true');
+          confirmation.focus();
+          return;
+        }
+        busy = true;
+        fields.disabled = true;
+        submit.textContent = '正在创建…';
+        const controller = new AbortController();
+        const timeout = setTimeout(() => controller.abort(), 20000);
+        try {
+          const response = await fetch('/api/auth/setup', {
+            method: 'POST', cache: 'no-store', credentials: 'same-origin', signal: controller.signal,
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({setup_token: setupToken.value.trim(), username: username.value.trim(), password: password.value})
+          });
+          if (!response.ok) {
+            feedback.textContent = response.status === 403 || response.status === 401 ? '初始化码不正确或访问来源无效，请检查后重试。'
+              : response.status === 400 || response.status === 422 ? '请检查初始化码、账号和密码，密码至少需要 12 个字符。'
+              : response.status === 409 ? '此工作台可能已完成初始化，或配置暂时无法保存。请尝试登录或检查部署权限。'
+              : response.status === 429 ? '尝试次数较多，请稍后再试。'
+              : '暂时无法完成初始化，请检查部署状态后重试。';
+            if (response.status === 409) loginLink.hidden = false;
+            if (response.status === 403 || response.status === 401) setupToken.setAttribute('aria-invalid', 'true');
+            return;
+          }
+          const result = await response.json();
+          let next = '/#/overview';
+          if (typeof result.next === 'string' && result.next.startsWith('/') && !result.next.startsWith('//')) {
+            const target = new URL(result.next, location.origin);
+            if (target.origin === location.origin && !['/login', '/setup'].includes(target.pathname)) next = target.pathname + target.search + target.hash;
+          }
+          setupToken.value = password.value = confirmation.value = '';
+          location.assign(next);
+        } catch {
+          feedback.textContent = '暂时无法连接工作台。如提交可能已完成，请尝试登录；否则稍后重试。';
+          loginLink.hidden = false;
+        } finally {
+          clearTimeout(timeout);
+          busy = false;
+          fields.disabled = false;
+          submit.textContent = '创建并进入工作台';
+          if (setupToken.getAttribute('aria-invalid') === 'true') setupToken.focus();
+        }
+      });
+    })();
+  </script>
+</body>
+</html>

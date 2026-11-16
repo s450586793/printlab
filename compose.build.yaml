@@ -1,0 +1,14 @@
+services:
+  prepare:
+    image: ${PRINTLAB_BUILD_IMAGE:-printlab:local}
+    pull_policy: never
+  printlab:
+    image: ${PRINTLAB_BUILD_IMAGE:-printlab:local}
+    pull_policy: build
+    build:
+      context: .
+      args:
+        NODE_IMAGE: ${PRINTLAB_NODE_IMAGE:-node:22-bookworm-slim}
+        PYTHON_IMAGE: ${PRINTLAB_PYTHON_IMAGE:-python:3.12-slim-bookworm}
+        HTTP_PROXY: ${PRINTLAB_BUILD_PROXY:-}
+        HTTPS_PROXY: ${PRINTLAB_BUILD_PROXY:-}
