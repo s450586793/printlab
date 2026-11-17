@@ -263,6 +263,39 @@ def test_devices_and_ams_use_real_entity_values_without_x2d_routes(workspace, sn
     assert ha.inventory()['items'] == [] and ha.inventory()['state'] == 'unavailable'
 
 
+@pytest.mark.parametrize('metadata', [
+    {'manufacturer': 'MakerWorld', 'model': 'Creator profile', 'identifier': 'makerworld_account_12345'},
+    {'manufacturer': ' makerworld ', 'model': None, 'identifier': 'ACCOUNT12345'},
+    {'manufacturer': None, 'model': ' creator PROFILE ', 'identifier': 'ACCOUNT12345'},
+    {'manufacturer': None, 'model': None, 'identifier': 'MAKERWORLD_ACCOUNT_12345'},
+])
+def test_makerworld_profiles_are_not_printers_or_cache_sources(workspace, snapshot, monkeypatch, metadata):
+    snapshot['devices'].append({'id': 'creator', 'name': '改过名字的作者', 'config_entries': ['entry-a'],
+                                'identifiers': [['bambu_lab', metadata['identifier']]],
+                                'manufacturer': metadata['manufacturer'], 'model': metadata['model']})
+    monkeypatch.setattr(ha, '_snapshot', lambda: snapshot)
+    calls = fake_client(monkeypatch)
+
+    assert [row['id'] for row in ha.device_list()['devices']] == ['printer-a', 'printer-b']
+    with pytest.raises(core.WorkflowError):
+        ha.device('creator')
+    assert ha.history_view()['cache_count'] == 2
+    assert {kwargs['params']['serial'] for path, kwargs in calls} == {'SERIALA123', 'SERIALB456'}
+
+
+@pytest.mark.parametrize('model', ['Other', None])
+def test_unknown_offline_printer_named_makerworld_stays_discoverable(workspace, snapshot, monkeypatch, model):
+    snapshot['devices'][0].update(name_by_user='MakerWorld', model=model)
+    snapshot['registry'] = []
+    snapshot['states'] = []
+    monkeypatch.setattr(ha, '_snapshot', lambda: snapshot)
+
+    listing = ha.device_list()['devices']
+    assert [row['id'] for row in listing] == ['printer-a', 'printer-b']
+    assert listing[0]['name'] == 'MakerWorld' and listing[0]['connected'] is False
+    assert ha.device('printer-a')['printer']['id'] == 'printer-a'
+
+
 def test_selection_disabled_states_stale_and_unknown_values(workspace, snapshot, monkeypatch):
     core.write_json(workspace / 'Runtime/config.json', {'ha_printer_id': 'printer-b'})
     snapshot['_stale'] = True

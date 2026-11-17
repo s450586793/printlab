@@ -305,6 +305,12 @@ def _printers(snapshot):
                        if isinstance(pair, (list, tuple)) and len(pair) == 2 and pair[0] == 'bambu_lab']
         if not (ids.intersection(row.get('config_entries') or []) or identifiers):
             continue
+        # ha-bambulab 同时登记 MakerWorld 作者资料，它们不是打印机。
+        if ((_text(row.get('manufacturer')) or '').strip().casefold() == 'makerworld'
+                or (_text(row.get('model')) or '').strip().casefold() == 'creator profile'
+                or any(isinstance(value, str) and value.casefold().startswith('makerworld_account_')
+                       for value in identifiers)):
+            continue
         if not identifiers or not isinstance(identifiers[0], str) or not re.fullmatch(r'[A-Za-z0-9_-]{5,80}', identifiers[0]):
             continue
         if not isinstance(row.get('id'), str) or not re.fullmatch(r'[A-Za-z0-9_-]{1,128}', row['id']):
