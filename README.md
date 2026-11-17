@@ -18,7 +18,7 @@ docker compose pull
 docker compose up -d
 ```
 
-默认使用 `ghcr.io/s450586793/printlab:latest`，仅对宿主本机开放 <http://127.0.0.1:8018>。NAS 或其他电脑访问时，先在 `.env` 中设置 `PRINTLAB_BIND_IP`、`PRINTLAB_PORT`，并将 `PRINTLAB_STUDIO_URL` 改为浏览器实际访问的地址，再启动服务。数据默认保存在 `./deploy/data`，可通过 `PRINTLAB_DATA_DIR` 修改。
+默认从 Docker Hub 拉取 `docker.io/s450586793/printlab:latest`，仅对宿主本机开放 <http://127.0.0.1:8018>。NAS 或其他电脑访问时，先在 `.env` 中设置 `PRINTLAB_BIND_IP`、`PRINTLAB_PORT`，并将 `PRINTLAB_STUDIO_URL` 改为浏览器实际访问的地址，再启动服务。数据默认保存在 `./deploy/data`，可通过 `PRINTLAB_DATA_DIR` 修改。
 
 首次访问 <http://127.0.0.1:8018/setup>，在部署终端读取初始化码：
 
@@ -56,7 +56,7 @@ Linux 镜像内置 Bambu Studio `02.09.01.70` 的离线切片程序与资源。�
 
 ## 更新与开发
 
-在仓库目录执行 `docker compose pull` 和 `docker compose up -d` 更新镜像；更新前备份数据目录。支持固定镜像版本或 digest，也可叠加 `compose.build.yaml` 从源码构建，见 [Docker 部署指南](docs/DOCKER.md#镜像更新与源码构建)。
+GitHub `main` 更新后，Actions 自动测试、构建并发布 Docker Hub 镜像。在仓库目录执行 `docker compose pull` 和 `docker compose up -d` 更新镜像；更新前备份数据目录。支持固定镜像版本或 digest，也可叠加 `compose.build.yaml` 从源码构建。自行发布所需的 Actions 配置见 [Docker 部署指南](docs/DOCKER.md#镜像更新与源码构建)。
 
 源码包含工作台、原创流程文档、角色提示词与空项目模板。依赖与版本见 [依赖说明](docs/DEPENDENCIES.md)，镜像中的第三方许可及源码入口见 [第三方说明](THIRD_PARTY_NOTICES.md)，验证记录见 [验证说明](docs/VERIFICATION.md)。
 
