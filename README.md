@@ -8,25 +8,42 @@ PrintLab 是运行在 Docker 中的 3D 打印工作台，面向 Linux / NAS 的 
 
 ## Docker 快速开始
 
-安装 Docker 与 Compose 插件后，执行：
+安装 Docker 与 Compose 插件，将下面内容保存为 `compose.yaml`。把 `192.168.1.100` 改成宿主机的实际 IP；修改左侧端口时，也要同步修改 `PRINTLAB_STUDIO_URL` 中的端口。
+
+```yaml
+services:
+  printlab:
+    image: ghcr.io/s450586793/printlab:latest
+    ports:
+      - "8018:8018"
+    volumes:
+      - ./data:/data
+    environment:
+      TZ: Asia/Shanghai
+      PRINTLAB_STUDIO_URL: http://192.168.1.100:8018
+    security_opt:
+      - seccomp=unconfined
+      - apparmor=unconfined
+```
+
+在 `compose.yaml` 所在目录创建数据文件夹，并授予容器用户（UID 1000）写权限，然后启动：
 
 ```sh
-git clone https://github.com/s450586793/printlab.git PrintLab
-cd PrintLab
-cp .env.example .env
+mkdir -p data
+sudo chown 1000:1000 data
 docker compose pull
 docker compose up -d
 ```
 
-默认从 GitHub 镜像仓库 GHCR 拉取 `ghcr.io/s450586793/printlab:latest`，仅对宿主本机开放 <http://127.0.0.1:8018>。NAS 或其他电脑访问时，先在 `.env` 中设置 `PRINTLAB_BIND_IP`、`PRINTLAB_PORT`，并将 `PRINTLAB_STUDIO_URL` 改为浏览器实际访问的地址，再启动服务。数据默认保存在 `./deploy/data`，可通过 `PRINTLAB_DATA_DIR` 修改。
+打开 `http://宿主机IP:8018`。项目、账号、模型 API 和 HA 配置都保存在 `./data`，无需克隆源码、创建 `.env` 或单独挂载密钥目录。`PRINTLAB_STUDIO_URL` 必须与浏览器实际访问的地址一致；两条 `security_opt` 用于支持 Codex 的工具执行，保留即可。需要开机自动恢复时，可在 `image` 下添加 `restart: unless-stopped`。
 
-首次访问 <http://127.0.0.1:8018/setup>，在部署终端读取初始化码：
+首次访问该地址的 `/setup`，在部署终端读取初始化码：
 
 ```sh
 docker compose exec printlab cat /data/Runtime/private/setup-token
 ```
 
-在网页输入初始化码、管理员账号和至少 **12 位**的密码，完成初始化后登录。无需提前创建密钥文件；账号和项目会在重启、更新镜像后保留。端口、内网访问、反向代理、旧数据迁移、备份及源码构建见 [Docker 部署指南](docs/DOCKER.md)。
+在网页输入初始化码、管理员账号和至少 **12 位**的密码，完成初始化后登录。账号和项目会在重启、更新镜像后保留。HTTPS 反向代理还需设置可信代理头；仓库内另提供自动准备目录权限的完整 Compose。端口、反向代理、旧数据迁移、备份及源码构建见 [Docker 部署指南](docs/DOCKER.md)。
 
 ## 配置模型并创建项目
 
@@ -56,7 +73,7 @@ Linux 镜像内置 Bambu Studio `02.09.01.70` 的离线切片程序与资源。�
 
 ## 更新与开发
 
-GitHub `main` 更新后，Actions 自动测试、构建并发布 GHCR 镜像，使用 GitHub 自动提供的授权，无需另配 Docker Hub 账号。在仓库目录执行 `docker compose pull` 和 `docker compose up -d` 更新镜像；更新前备份数据目录。支持固定镜像版本或 digest，也可叠加 `compose.build.yaml` 从源码构建。自行发布所需的 Actions 配置见 [Docker 部署指南](docs/DOCKER.md#镜像更新与源码构建)。
+GitHub `main` 更新后，Actions 自动测试、构建并发布 GHCR 镜像，使用 GitHub 自动提供的授权，无需另配 Docker Hub 账号。在 `compose.yaml` 所在目录执行 `docker compose pull` 和 `docker compose up -d` 更新镜像；更新前备份数据目录。支持固定镜像版本或 digest；克隆仓库后也可叠加 `compose.build.yaml` 从源码构建。自行发布所需的 Actions 配置见 [Docker 部署指南](docs/DOCKER.md#镜像更新与源码构建)。
 
 源码包含工作台、原创流程文档、角色提示词与空项目模板。依赖与版本见 [依赖说明](docs/DEPENDENCIES.md)，镜像中的第三方许可及源码入口见 [第三方说明](THIRD_PARTY_NOTICES.md)，验证记录见 [验证说明](docs/VERIFICATION.md)。
 

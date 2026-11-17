@@ -8,25 +8,42 @@ PrintLab is a Docker-based 3D-printing workbench for **amd64 (x86_64)** Linux / 
 
 ## Docker quick start
 
-Install Docker and the Compose plugin, then run:
+Install Docker and the Compose plugin, then save the following as `compose.yaml`. Replace `192.168.1.100` with your host's actual IP address. If you change the published port on the left, also update the port in `PRINTLAB_STUDIO_URL`.
+
+```yaml
+services:
+  printlab:
+    image: ghcr.io/s450586793/printlab:latest
+    ports:
+      - "8018:8018"
+    volumes:
+      - ./data:/data
+    environment:
+      TZ: Asia/Shanghai
+      PRINTLAB_STUDIO_URL: http://192.168.1.100:8018
+    security_opt:
+      - seccomp=unconfined
+      - apparmor=unconfined
+```
+
+In the directory containing `compose.yaml`, create the data directory, give the container user (UID 1000) write access, and start the service:
 
 ```sh
-git clone https://github.com/s450586793/printlab.git PrintLab
-cd PrintLab
-cp .env.example .env
+mkdir -p data
+sudo chown 1000:1000 data
 docker compose pull
 docker compose up -d
 ```
 
-Compose pulls `ghcr.io/s450586793/printlab:latest` from GitHub Container Registry (GHCR) and exposes <http://127.0.0.1:8018> on the host's loopback interface by default. For NAS or remote access, set `PRINTLAB_BIND_IP` and `PRINTLAB_PORT` in `.env`, and set `PRINTLAB_STUDIO_URL` to the actual browser URL before starting the service. Data is stored in `./deploy/data` by default; change it with `PRINTLAB_DATA_DIR`.
+Open `http://HOST_IP:8018`. Projects, accounts, model API settings, and HA settings are stored in `./data`. No source checkout, `.env`, or separate secret mount is needed. Set `PRINTLAB_STUDIO_URL` to the actual browser URL, and keep both `security_opt` entries so Codex can execute tools. To restart automatically when the host boots, add `restart: unless-stopped` below `image`.
 
-On the first visit, open <http://127.0.0.1:8018/setup> and read the initialization code in the deployment terminal:
+On the first visit, open `/setup` at that address and read the initialization code in the deployment terminal:
 
 ```sh
 docker compose exec printlab cat /data/Runtime/private/setup-token
 ```
 
-Enter the code, an administrator username, and a password of at least **12 characters** in the browser, then sign in. No pre-created secret file is required. Accounts and projects persist across restarts and image updates. See the [Docker deployment guide](docs/DOCKER.md) for ports, LAN access, reverse proxies, migration, backups, and source builds. Detailed reference guides currently use Simplified Chinese.
+Enter the code, an administrator username, and a password of at least **12 characters** in the browser, then sign in. Accounts and projects persist across restarts and image updates. HTTPS reverse proxies also require trusted proxy header settings. The repository includes a full Compose configuration that prepares directory permissions automatically. See the [Docker deployment guide](docs/DOCKER.md) for ports, reverse proxies, migration, backups, and source builds. Detailed reference guides currently use Simplified Chinese.
 
 ## Configure a model and create a project
 
@@ -56,7 +73,7 @@ For device status, configure `ha-bambulab` in your Home Assistant, then open Set
 
 ## Updates and development
 
-GitHub Actions tests, builds, and publishes the GHCR image when `main` changes, using GitHub's automatic authorization without a separate Docker Hub account. Run `docker compose pull` and `docker compose up -d` in the repository directory to update the image. Back up the data directory first. You can pin an image version or digest, or build from source with `compose.build.yaml`. See [Updates and source builds](docs/DOCKER.md#镜像更新与源码构建) for publishing configuration.
+GitHub Actions tests, builds, and publishes the GHCR image when `main` changes, using GitHub's automatic authorization without a separate Docker Hub account. Run `docker compose pull` and `docker compose up -d` in the directory containing `compose.yaml` to update the image. Back up the data directory first. You can pin an image version or digest, or clone the repository and build from source with `compose.build.yaml`. See [Updates and source builds](docs/DOCKER.md#镜像更新与源码构建) for publishing configuration.
 
 The source includes the workbench, original workflow documents, role prompts, and empty project templates. [Dependencies and versions](docs/DEPENDENCIES.md) · [Third-party licenses and source links](THIRD_PARTY_NOTICES.md) · [Verification record](docs/VERIFICATION.md)
 
