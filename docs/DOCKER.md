@@ -1,6 +1,6 @@
 # 在 Docker 中运行 PrintLab 与 Codex
 
-此部署把工作台、项目文件、Codex 执行与 CadQuery/Blender 放到 Linux 中。Docker Hub 镜像为 `docker.io/s450586793/printlab`，当前仅支持 **Linux amd64（x86_64）**；内置 Bambu Studio AppImage 不支持 ARM64。模型服务使用自己的 API 或兼容网关，Home Assistant 可选。
+此部署把工作台、项目文件、Codex 执行与 CadQuery/Blender 放到 Linux 中。GitHub 镜像仓库 GHCR 中的公开镜像为 `ghcr.io/s450586793/printlab`，当前仅支持 **Linux amd64（x86_64）**；内置 Bambu Studio AppImage 不支持 ARM64。模型服务使用自己的 API 或兼容网关，Home Assistant 可选。
 
 网页可以直接新建项目，在项目对话中提交需求、查看增量结果、补充信息、停止和接续。每个项目保存独立 Codex 会话，源文件、导出、预览与交接持久保留。刷新浏览器不会重新提交任务；服务重启后中断的任务需要明确选择接续。
 
@@ -35,15 +35,11 @@
 
 ## 镜像更新与源码构建
 
-默认 Compose 从 Docker Hub 拉取镜像。推送到 GitHub 的 `main` 后，Actions 先运行 Python、Node 测试和前端构建，再构建并推送镜像；`main` 更新发布 `latest` 和 `sha-` 标签，`v*` 标签发布对应版本。Pull Request 仅验证和构建，不登录或推送镜像。发布流程附带 SBOM 和构建来源记录。
+默认 Compose 从 GHCR 拉取镜像。推送到 GitHub 的 `main` 后，Actions 先运行 Python、Node 测试和前端构建，再构建并推送镜像；`main` 更新发布 `latest` 和 `sha-` 标签，`v*` 标签发布对应版本。Pull Request 仅验证和构建，不登录或推送镜像。发布流程附带 SBOM 和构建来源记录。
 
-自行发布时，先在 Docker Hub 创建公开的 `printlab` 仓库，再到 GitHub 仓库的 Settings → Secrets and variables → Actions 配置：
+流水线使用 GitHub 自动提供的 `GITHUB_TOKEN` 登录 GHCR，发布任务具有 `packages: write` 权限，无需另配 Docker Hub 账号或 Access Token。首次发布后将 GitHub Packages 中的镜像包设为公开，其他使用者即可匿名拉取。
 
-- Secret `DOCKERHUB_USERNAME`：有权推送该仓库的 Docker Hub 用户名。
-- Secret `DOCKERHUB_TOKEN`：Docker Hub Access Token，需要 Read & Write 权限。
-- Variable `DOCKERHUB_IMAGE`：完整镜像名称，例如 `docker.io/your-account/printlab`；未设置时使用 `docker.io/s450586793/printlab`。
-
-账号和 Token 只通过 Actions Secret 提供，不写入源码或镜像。使用其他镜像名称时，在部署 `.env` 中同步设置 `PRINTLAB_IMAGE`。消费者拉取公开镜像不需要上述发布凭据。
+自行 Fork 发布时，在 `.github/workflows/docker.yml` 中修改镜像所属账号，并在 Compose 或部署 `.env` 的 `PRINTLAB_IMAGE` 中使用相同镜像名称。模型 API、Home Assistant 和管理员凭据仍只保存在自己的部署数据中。
 
 稳定部署可在 `.env` 中把 `PRINTLAB_IMAGE` 设为已发布版本或固定的镜像 digest；两个服务会共同使用它。更新前备份数据目录与所用镜像 digest，再执行 `docker compose pull` 和 `docker compose up -d`。备份包含凭据和项目，保存在自己的受限目录。
 

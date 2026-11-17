@@ -18,7 +18,7 @@ docker compose pull
 docker compose up -d
 ```
 
-Compose pulls `docker.io/s450586793/printlab:latest` from Docker Hub and exposes <http://127.0.0.1:8018> on the host's loopback interface by default. For NAS or remote access, set `PRINTLAB_BIND_IP` and `PRINTLAB_PORT` in `.env`, and set `PRINTLAB_STUDIO_URL` to the actual browser URL before starting the service. Data is stored in `./deploy/data` by default; change it with `PRINTLAB_DATA_DIR`.
+Compose pulls `ghcr.io/s450586793/printlab:latest` from GitHub Container Registry (GHCR) and exposes <http://127.0.0.1:8018> on the host's loopback interface by default. For NAS or remote access, set `PRINTLAB_BIND_IP` and `PRINTLAB_PORT` in `.env`, and set `PRINTLAB_STUDIO_URL` to the actual browser URL before starting the service. Data is stored in `./deploy/data` by default; change it with `PRINTLAB_DATA_DIR`.
 
 On the first visit, open <http://127.0.0.1:8018/setup> and read the initialization code in the deployment terminal:
 
@@ -56,7 +56,7 @@ For device status, configure `ha-bambulab` in your Home Assistant, then open Set
 
 ## Updates and development
 
-GitHub Actions tests, builds, and publishes the Docker Hub image when `main` changes. Run `docker compose pull` and `docker compose up -d` in the repository directory to update the image. Back up the data directory first. You can pin an image version or digest, or build from source with `compose.build.yaml`. See [Updates and source builds](docs/DOCKER.md#镜像更新与源码构建) for publishing configuration.
+GitHub Actions tests, builds, and publishes the GHCR image when `main` changes, using GitHub's automatic authorization without a separate Docker Hub account. Run `docker compose pull` and `docker compose up -d` in the repository directory to update the image. Back up the data directory first. You can pin an image version or digest, or build from source with `compose.build.yaml`. See [Updates and source builds](docs/DOCKER.md#镜像更新与源码构建) for publishing configuration.
 
 The source includes the workbench, original workflow documents, role prompts, and empty project templates. [Dependencies and versions](docs/DEPENDENCIES.md) · [Third-party licenses and source links](THIRD_PARTY_NOTICES.md) · [Verification record](docs/VERIFICATION.md)
 

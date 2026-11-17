@@ -1,7 +1,7 @@
 name: printlab
 services:
   prepare:
-    image: ${PRINTLAB_IMAGE:-docker.io/s450586793/printlab:latest}
+    image: ${PRINTLAB_IMAGE:-ghcr.io/s450586793/printlab:latest}
     platform: linux/amd64
     user: "0:0"
     entrypoint:
@@ -13,7 +13,7 @@ services:
       - ./deploy/secrets:/secrets
     restart: "no"
   printlab:
-    image: ${PRINTLAB_IMAGE:-docker.io/s450586793/printlab:latest}
+    image: ${PRINTLAB_IMAGE:-ghcr.io/s450586793/printlab:latest}
     platform: linux/amd64
     init: false
     # Allow Codex to create its own workspace sandbox inside this container.
