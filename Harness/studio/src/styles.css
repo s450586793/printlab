@@ -53,8 +53,7 @@ main{padding:var(--page-padding);max-width:1680px;margin:0 auto}
 .text-link{display:inline-flex;align-items:center;gap:6px;min-height:30px;padding:4px 0;font-size:12px;font-weight:500;color:var(--accent)}.text-link:hover{text-decoration:underline;text-underline-offset:3px}
 .section-heading{display:flex;justify-content:space-between;align-items:center;gap:16px;margin-bottom:12px}.section-heading h2{font-size:17px}.section-heading .eyebrow{display:block;margin-bottom:4px}
 .section-count{font-size:12px;color:var(--muted);font-weight:400;margin-left:5px}.section-block{margin-top:24px}
-.overview-main{display:grid;grid-template-columns:minmax(0,1fr) 244px;gap:20px;align-items:start}
-.overview-projects{min-width:0}.overview-side{display:flex;flex-direction:column;gap:14px;min-width:0}.overview-device-selector{padding-bottom:2px}
+.overview-projects{min-width:0}
 .overview-models{margin-top:24px;padding-top:20px;border-top:1px solid var(--line)}
 .project-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
 .project-card-wrapper{min-width:0}.project-card-wrapper>.project-card{width:100%}.project-card{display:block;min-width:0;text-align:left;padding:0}
@@ -80,13 +79,7 @@ main{padding:var(--page-padding);max-width:1680px;margin:0 auto}
 .device-name{margin:12px 0 8px;font-size:12px;color:var(--muted)}.device-name strong{display:block;font-size:26px;line-height:1.2;letter-spacing:-.5px;color:var(--text)}
 .device-status-line{display:flex;align-items:center;gap:7px;font-size:12px;color:var(--muted)}.device-status-line svg{width:15px;height:15px}
 .device-summary p{font-size:12px;line-height:1.55;color:var(--muted);margin:8px 0 12px}.device-summary .button{font-size:12px}
-.studio-stats{display:grid;grid-template-columns:repeat(3,1fr);padding:4px 0 10px;border-bottom:1px solid var(--line)}
-.studio-stats>div{display:flex;flex-direction:column;gap:4px;text-align:center;border-right:1px solid var(--line)}.studio-stats>div:last-child{border:0}
-.studio-stats .stat-number{font-size:20px;line-height:1.2;letter-spacing:-.4px;color:var(--text)}.studio-stats>div>span:last-child{font-size:11px;color:var(--muted)}
-.overview-next .section-heading{margin-bottom:6px}.overview-next .section-heading h2{font-size:14px}.overview-next .muted{font-size:11px}
-.overview-next-actions{max-height:210px;overflow:auto}.attention-row{display:flex;align-items:flex-start;gap:9px;padding:10px 0;border-top:1px solid var(--line)}
-.step-number{font-size:10px;color:var(--accent);padding-top:2px}.attention-row h3{font-size:12px}.attention-row p{font-size:12px;line-height:1.5;color:var(--muted);margin-top:3px}
-.workspace-resource{justify-content:space-between}.quiet-empty{padding:20px;border-top:1px solid var(--line);font-size:13px;color:var(--muted)}
+.quiet-empty{padding:20px;border-top:1px solid var(--line);font-size:13px;color:var(--muted)}
 .page-footer{display:flex;justify-content:space-between;gap:16px;padding-top:16px;margin-top:28px;border-top:1px solid var(--line);font-size:11px;color:var(--muted)}
 .collection-toolbar{display:flex;justify-content:space-between;align-items:center;gap:16px;margin-bottom:16px;min-width:0}
 .collection-actions{display:flex;align-items:center;justify-content:flex-end;gap:10px;min-width:0}.collection-actions .search-box{min-width:0;flex:1}
@@ -223,7 +216,7 @@ main{padding:var(--page-padding);max-width:1680px;margin:0 auto}
 .favorite-zoom img{display:block;max-width:100%;max-height:65vh;margin:auto;object-fit:contain}.favorite-zoom>p{font-size:12px;color:var(--muted);margin-top:12px}
 .favorites-page .filter-tabs{flex-wrap:wrap}
 @media(max-width:1200px){
- .overview-main{grid-template-columns:minmax(0,1fr) 228px;gap:16px}.project-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.favorites-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .project-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.favorites-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
  .detail-top{grid-template-columns:minmax(0,1fr) 230px;gap:16px}.device-page-grid{grid-template-columns:230px minmax(0,1fr)}.live-metrics{grid-template-columns:1fr 1fr}
  .library-intro>div:last-child{display:none}.device-shortcuts{grid-template-columns:1fr 1fr}.material-grid{grid-template-columns:1fr 1fr}
 }
@@ -232,12 +225,10 @@ main{padding:var(--page-padding);max-width:1680px;margin:0 auto}
  .brand{margin:0 0 24px}.brand>div,.sidebar .nav-name,.sidebar-label,.workspace-indicator,.sidebar .nav-count{display:none}
  .sidebar nav{width:100%;gap:16px}.nav-group,.sidebar-bottom{gap:6px}.sidebar nav a,.native-nav{justify-content:center;min-height:40px;padding:8px}
  .sidebar-bottom{padding:24px 0 0;width:100%}.native-nav{font-size:0;gap:0}.native-nav>svg:last-child:not(:first-child){display:none}
- .overview-main{grid-template-columns:minmax(0,1fr) 220px}.detail-top{grid-template-columns:minmax(0,1fr) 220px}.device-page-grid{grid-template-columns:220px minmax(0,1fr)}
+ .detail-top{grid-template-columns:minmax(0,1fr) 220px}.device-page-grid{grid-template-columns:220px minmax(0,1fr)}
  .document-columns{gap:20px}.document-columns>article:last-child{padding-left:20px}.local-badge{display:none}.topbar-actions{gap:6px}
 }
 @media(max-width:800px){
- .overview-main{grid-template-columns:1fr}.overview-side{display:grid;grid-template-columns:1fr 1fr;gap:12px}
- .overview-device-selector,.overview-next,.workspace-resource{grid-column:1/-1}.overview-side .studio-stats{align-self:start;padding:16px 0}
  .detail-top{grid-template-columns:1fr}.detail-sidebar{display:grid;grid-template-columns:1fr 1fr;gap:0 20px;padding-top:0}
  .detail-sidebar>.section-eyebrow{display:none}.detail-sidebar .dimensions-strip{grid-column:1}.detail-sidebar .spec-list{grid-column:2;grid-row:1/4}
  .detail-sidebar .approval-note,.detail-sidebar .project-shop-link{grid-column:1}.document-columns{grid-template-columns:1fr}
@@ -261,8 +252,7 @@ main{padding:var(--page-padding);max-width:1680px;margin:0 auto}
  .project-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:14px 12px}.project-cover{height:124px;margin-bottom:8px}
  .project-card h3{font-size:14px}.project-card-top{display:block}.project-card-top .status{font-size:10px;line-height:18px}
  .project-card>p{font-size:12px;line-height:1.5;min-height:36px}.project-card-meta{font-size:10px;margin-top:6px}.cover-id{top:8px;left:8px}.cover-open{opacity:1}
- .overview-side{display:flex;gap:12px}.overview-side .device-summary{padding:14px}.overview-side .studio-stats{padding:6px 0 12px}
- .overview-models{margin-top:20px;padding-top:16px}.overview-next-actions{max-height:180px}
+ .overview-models{margin-top:20px;padding-top:16px}
  .collection-toolbar{gap:12px;flex-direction:column;align-items:stretch;margin-bottom:16px}.filter-tabs{overflow-x:auto;scrollbar-width:thin}
  .filter-tabs button{min-height:40px;font-size:13px;padding:8px 12px}.search-box{min-height:40px;max-width:none}.search-box input{font-size:16px}
  .breadcrumb{font-size:11px;min-height:28px;margin-bottom:5px}.detail-heading h1{font-size:22px}.detail-heading .updated-note{display:none}

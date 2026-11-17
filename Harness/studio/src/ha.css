@@ -7,7 +7,6 @@
 .printer-selector select:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
 .printer-selector select:disabled{cursor:wait;opacity:.65}
 .topbar .printer-selector>span{display:none}.topbar .printer-selector select{min-width:92px;max-width:160px;min-height:32px;font-size:12px}
-.overview-device-selector .printer-selector{justify-content:space-between}.overview-device-selector .printer-selector select{min-width:100px;max-width:62%;min-height:32px}
 .printer-camera{padding:16px;background:var(--panel);border:1px solid var(--line);border-radius:var(--ui-radius,10px);margin-top:16px}
 .printer-camera img{display:block;width:100%;max-height:280px;aspect-ratio:16/9;object-fit:contain;background:#172018;border-radius:7px}
 .printer-camera .section-heading h2{font-size:17px}
@@ -17,11 +16,10 @@
  .printer-selector{justify-content:space-between;gap:10px;font-size:13px}.printer-selector select{font-size:16px;flex:1;min-width:0;max-width:70%;min-height:40px}
  .topbar .printer-selector select{font-size:13px;min-width:72px;max-width:104px;min-height:40px;padding-right:18px}
  .topbar:has(.printer-selector) .local-badge{display:none}
- .overview-device-selector .printer-selector select{font-size:16px;min-height:40px;max-width:70%}
  .printer-camera{padding:14px;margin-top:14px}.printer-camera img{max-height:220px}
  .printer-camera .section-heading{align-items:flex-start;flex-direction:column;gap:4px}
  .history-summary.cache-summary{grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
 }
 @media(pointer:coarse){
- .printer-selector select,.topbar .printer-selector select,.overview-device-selector .printer-selector select{font-size:16px;min-height:44px}
+ .printer-selector select,.topbar .printer-selector select{font-size:16px;min-height:44px}
 }
